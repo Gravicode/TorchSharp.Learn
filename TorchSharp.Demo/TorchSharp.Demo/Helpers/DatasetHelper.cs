@@ -268,7 +268,6 @@ namespace TorchSharp.Demo.Helpers
         }
         public static List<Tensor> Pop(this DataTable dt, string ColumnName)
         {
-            //var floats = new List<float>();
             var floats = new List<Tensor>();// [dt.Rows.Count];
             var rowIndex = 0;
             //var lablTensor = torch.zeros(new long[] { 1 }, torch.int64);
@@ -292,7 +291,6 @@ namespace TorchSharp.Demo.Helpers
 
         public static List<Tensor> Pop(this DataTable dt, string[] ColumnNames)
         {
-            //var floats = new List<float>();
             var floats = new List<Tensor>();// [dt.Rows.Count];
             var rowIndex = 0;
             var allCols = new HashSet<string>();

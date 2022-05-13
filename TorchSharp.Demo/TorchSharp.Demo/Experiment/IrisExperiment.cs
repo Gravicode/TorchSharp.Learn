@@ -16,10 +16,7 @@ namespace TorchSharp.Demo.Experiment
 {
     public class IrisExperiment
     {
-        //static int TotalRow = 150;
         private static int _epochs = 4;
-        //private static int _trainBatchSize = (int)(TotalRow*0.8);
-        //private static int _testBatchSize = (int)(TotalRow*0.2);
 
         private readonly static int _logInterval = 10;
 
@@ -42,31 +39,15 @@ namespace TorchSharp.Demo.Experiment
             var datasetPath = FileHelpers.AppDirectory+$"/../../../../Dataset/{dataset}.csv";
 
             random.manual_seed(1);
-
-            var cwd = Environment.CurrentDirectory;
-
-
-            /*
-            if (device.type == DeviceType.CUDA)
-            {
-                _trainBatchSize *= 4;
-                _testBatchSize *= 4;
-            }
-            */
-
+                        
             Console.WriteLine($"\tCreating the model...");
 
             var model = new IrisModel("model", device);
-
-            //var normImage = transforms.Normalize(new double[] { 0.1307 }, new double[] { 0.3081 }, device: (Device)device);
 
             Console.WriteLine($"\tPreparing training and test data...");
             Console.WriteLine();
 
             var dtset = DatasetHelper.LoadAsDataTable(datasetPath, true);
-            //dtset.OneHotEncoding("class");
-
-            //var train_label = dtset.Pop(new string[] { "class_Iris-setosa", "class_Iris-versicolor", "class_Iris-virginica" });
             var classes = dtset.ToCategory("class");
             var train_label = dtset.Pop("class");
             dtset.Normalization();
@@ -86,25 +67,6 @@ namespace TorchSharp.Demo.Experiment
                 test.Add((test_data[i], test_label[i]));
             }
            
-            /*
-             var splitted = dtset.Split();
-            var train_label = splitted.training.Pop(new string[] { "class_Iris-setosa", "class_Iris-versicolor", "class_Iris-virginica" });
-            var train_data = splitted.training.ToTensors();
-            var train = new List<(Tensor,Tensor)>();
-            for(int i = 0; i < train_label.Count; i++)
-            {
-                train.Add((train_data[i],train_label[i]));
-            }
-
-            var test_label = splitted.test.Pop(new string[] { "class_Iris-setosa", "class_Iris-versicolor", "class_Iris-virginica" });
-            var test_data = splitted.test.ToTensors();
-            var test = new List<(Tensor, Tensor)>();
-            for (int i = 0; i < test_label.Count; i++)
-            {
-                test.Add((test_data[i], test_label[i]));
-            }
-             */
-
             TrainingLoop(dataset, timeout, device, model, train, test);
             
         }
@@ -115,8 +77,6 @@ namespace TorchSharp.Demo.Experiment
 
             //var optimizer = torch.optim.SGD(model.parameters(), learningRate: 0.01);
 
-            //var scheduler = optim.lr_scheduler.StepLR(optimizer, 1, 0.1);
-
             var criterion = cross_entropy_loss();//# cross entropy loss
 
 
@@ -126,8 +86,6 @@ namespace TorchSharp.Demo.Experiment
             for (var epoch = 1; epoch <= _epochs; epoch++)
             {
 
-                //Train(model, optimizer, nll_loss(reduction: Reduction.Mean), device, train, epoch, 10, train.Count());
-                //Test(model, nll_loss(reduction: nn.Reduction.Sum), device, test, test.Count());
                 Train(model, optimizer, criterion, device, train, epoch, 1, train.Count());
                 Test(model, criterion, device, test, test.Count());
 
